@@ -10,6 +10,7 @@ import Explore from "./components/Explore";
 import Saved from "./components/Saved";
 import Cart from "./components/Cart";
 import ProductScreen from "./components/ProductScreen";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   const shuffle = (array) => {
@@ -38,9 +39,11 @@ function App() {
             <Route path="/products/all" exact>
               <Products />
             </Route>
-            <Route path="/products/:id">
-              <ProductScreen />
-            </Route>
+            <ScrollToTop>
+              <Route path="/products/all/:id" exact>
+                <ProductScreen />
+              </Route>
+            </ScrollToTop>
             <Route path="/explore">
               <Explore />
             </Route>

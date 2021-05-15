@@ -37,6 +37,13 @@ const reducer = (state, action) => {
         };
       }
 
+    case "UPDATE_QUANTITY":
+      const target = state.basket.find((x) => x.id === action.item.id);
+      target.quantity = action.item.quantity;
+      return {
+        ...state,
+      };
+
     case "EMPTY_BASKET":
       return {
         ...state,
@@ -45,7 +52,7 @@ const reducer = (state, action) => {
 
     case "REMOVE_FROM_BASKET":
       const index = state.basket.findIndex(
-        (basketItem) => basketItem.id === action.id
+        (basketItem) => basketItem.id === action.item.id
       );
       let newBasket = [...state.basket];
 

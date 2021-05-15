@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useStateValue } from "../StateProvider";
 import "boxicons";
+import notFound from "../svg/notfound.svg";
+import review from "../svg/review.svg";
 import bag from "../data/bag";
 import television from "../data/television";
 import clothing from "../data/clothing";
@@ -16,6 +17,16 @@ function ProductScreen() {
   const product = products.find((x) => x.id === params.id);
   const [quantity, setQuantity] = useState(1);
   const [{ basket, user }, dispatch] = useStateValue();
+  const history = useHistory();
+
+  if (!product) {
+    return (
+      <ProductNotFoundContainer>
+        <img src={notFound} alt="" />
+        <h1>Product Not Found</h1>
+      </ProductNotFoundContainer>
+    );
+  }
 
   const AddToCart = (e) => {
     dispatch({
@@ -32,7 +43,7 @@ function ProductScreen() {
         rating: product.rating,
         bcolor: product.bcolor,
         color: product.color,
-        quantity: product.quantity,
+        quantity: quantity,
       },
     });
     e.preventDefault();
@@ -59,13 +70,7 @@ function ProductScreen() {
     e.preventDefault();
   };
 
-  if (!product) {
-    return (
-      <ProductNotFoundContainer>Product Not Found</ProductNotFoundContainer>
-    );
-  }
-  var brand = product.producedBy.replace(" Official Store", "");
-  var targetStore = store.find((x) => x.name === brand);
+  var targetStore = store.find((x) => x.name === product?.brand);
 
   const IncQuantity = () => {
     setQuantity(quantity + 1);
@@ -76,16 +81,46 @@ function ProductScreen() {
       setQuantity(quantity - 1);
     }
   };
+
   return (
     <Container>
       <TopContainer>
+        <PreviousContainer onClick={history.goBack}>
+          <box-icon
+            name="left-arrow-alt"
+            color="#504e49"
+            animation="tada-hover"
+          ></box-icon>
+        </PreviousContainer>
+        <DotContainer>
+          <box-icon
+            name="dots-horizontal-rounded"
+            color="#504e49"
+            animation="tada-hover"
+          ></box-icon>
+        </DotContainer>
+        <ShareContainer>
+          <box-icon
+            name="share-alt"
+            type="solid"
+            color="#504e49"
+            animation="tada-hover"
+          ></box-icon>
+        </ShareContainer>
+        <QRContainer>
+          <box-icon
+            name="barcode-reader"
+            color="#504e49"
+            animation="tada-hover"
+          ></box-icon>
+        </QRContainer>
         <ImgContainer bcolor={product.bcolor}>
           <img src={product.url} alt="" />
         </ImgContainer>
         <DescriptionContainer>
           <Wrap>
             <Brand>
-              <h1>{brand}</h1>
+              <h1>{product.brand}</h1>
             </Brand>
             <ProductName>
               <h3>{product.fullName}</h3>
@@ -211,6 +246,7 @@ function ProductScreen() {
                   name="message-square-detail"
                   type="solid"
                   color="white"
+                  animation="tada-hover"
                 ></box-icon>
                 <span>Chat Now</span>
               </StoreButtonContainer>
@@ -219,6 +255,7 @@ function ProductScreen() {
                   type="solid"
                   name="shopping-bags"
                   color="white"
+                  animation="tada-hover"
                 ></box-icon>
                 <span>View Shop</span>
               </StoreButtonContainer>
@@ -226,13 +263,36 @@ function ProductScreen() {
           </StoreMainContainer>
         </StoreInformation>
       </StoreInformationContainer>
+      <ReviewContainer>
+        <ReviewInnerContainer>
+          <img src={review} alt="" />
+          <h1>No review yet</h1>
+        </ReviewInnerContainer>
+      </ReviewContainer>
     </Container>
   );
 }
 
 export default ProductScreen;
 
-const ProductNotFoundContainer = styled.div``;
+const ProductNotFoundContainer = styled.div`
+  height: calc(100vh - 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-image: url();
+  img {
+    width: 250px;
+    margin-bottom: 50px;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #504e49;
+  }
+`;
 
 const Container = styled.div``;
 
@@ -240,8 +300,100 @@ const TopContainer = styled.div`
   height: calc(120vh - 50px);
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #e3e8ee;
   overflow: scroll;
+  position: relative;
+`;
+
+const PreviousContainer = styled.div`
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #f3f3f3;
+  transition: all 0.5s ease;
+
+  box-icon {
+    width: 22px;
+    height: 22px;
+  }
+  :hover {
+    background-color: #e4e4e4;
+  }
+`;
+
+const DotContainer = styled.div`
+  position: absolute;
+  top: 25px;
+  right: 50px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #f3f3f3;
+  transition: all 0.5s ease;
+
+  box-icon {
+    width: 22px;
+    height: 22px;
+  }
+  :hover {
+    background-color: #e4e4e4;
+  }
+`;
+
+const ShareContainer = styled.div`
+  position: absolute;
+  top: 25px;
+  right: 110px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #f3f3f3;
+  transition: all 0.5s ease;
+
+  box-icon {
+    width: 18px;
+    height: 18px;
+  }
+  :hover {
+    background-color: #e4e4e4;
+  }
+`;
+
+const QRContainer = styled.div`
+  position: absolute;
+  top: 25px;
+  right: 150px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #f3f3f3;
+  transition: all 0.5s ease;
+
+  box-icon {
+    width: 20px;
+    height: 20px;
+  }
+  :hover {
+    background-color: #e4e4e4;
+  }
 `;
 
 const ImgContainer = styled.div`
@@ -263,7 +415,6 @@ const DescriptionContainer = styled.div`
   align-items: center;
   justify-content: center;
   background-color: white;
-  /* background-image: url("https://www.transparenttextures.com/patterns/tex2res2.png"); */
 `;
 
 const Wrap = styled.div`
@@ -449,7 +600,7 @@ const StoreInformation = styled.div`
   align-items: center;
   img {
     /* height: 100%; */
-    width: 18%;
+    width: 30%;
     max-height: 100%;
     object-fit: contain;
     border-radius: 8px;
@@ -457,8 +608,8 @@ const StoreInformation = styled.div`
 `;
 
 const StoreMainContainer = styled.div`
-  width: 50%;
-  margin-left: 30px;
+  width: 70%;
+  margin-left: 100px;
   display: flex;
   flex-direction: column;
   h1 {
@@ -495,7 +646,10 @@ const StoreButtonContainer = styled.div`
   border-radius: 8px;
   color: white;
   cursor: pointer;
-
+  :hover {
+    box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+  }
   box-icon {
     width: 20px;
     height: 20px;
@@ -506,5 +660,34 @@ const StoreButtonContainer = styled.div`
     font-size: 15px;
     font-weight: 600;
     margin-bottom: 3px;
+  }
+`;
+
+const ReviewContainer = styled.div`
+  margin: 30px 0;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ReviewInnerContainer = styled.div`
+  width: 87%;
+  height: 90%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  img {
+    margin-bottom: 50px;
+    width: 200px;
+  }
+  h1 {
+    font-size: 23px;
+    font-weight: 700;
+    color: #504e49;
   }
 `;

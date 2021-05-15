@@ -32,6 +32,7 @@ function ProductCard({
         rating: rating,
         bcolor: bcolor,
         color: color,
+        quantity: 1,
       },
     });
     e.preventDefault();
@@ -52,6 +53,7 @@ function ProductCard({
         rating: rating,
         bcolor: bcolor,
         color: color,
+        quantity: 1,
       },
     });
     e.preventDefault();

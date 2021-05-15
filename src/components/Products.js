@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import ProductCard from "./ProductCard";
@@ -8,31 +8,42 @@ import clothing from "../data/clothing";
 import sport from "../data/sport";
 
 function Products() {
+  const shuffle = (array) => {
+    var currentIndex = array.length,
+      temporaryValue,
+      randomIndex;
+    while (0 !== currentIndex) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+    return array;
+  };
   const products = [...bag, ...television, ...clothing, ...sport];
-  // const shuffle = (array) => {
-  //   var currentIndex = array.length,
-  //     temporaryValue,
-  //     randomIndex;
-  //   while (0 !== currentIndex) {
-  //     randomIndex = Math.floor(Math.random() * currentIndex);
-  //     currentIndex -= 1;
-  //     temporaryValue = array[currentIndex];
-  //     array[currentIndex] = array[randomIndex];
-  //     array[randomIndex] = temporaryValue;
-  //   }
-  //   return array;
-  // };
-  // shuffle(products);
+  shuffle(bag);
+  shuffle(television);
+  shuffle(clothing);
+  shuffle(sport);
   return (
     <Container>
       <Header>
-        <h1>Products</h1>
+        <HeaderContainer>
+          <box-icon
+            type="solid"
+            name="shopping-bag-alt"
+            color="#504e49"
+            animation="tada"
+          ></box-icon>
+          <h1>Products</h1>
+        </HeaderContainer>
       </Header>
       <ProductContainer>
         {products?.map((product) => (
           <Link
             style={{ textDecoration: "none" }}
-            to={`/products/${product.id}`}
+            to={`/products/all/${product.id}`}
           >
             <ProductCard
               id={product.id}
@@ -63,15 +74,32 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
-  height: 10vh;
+  height: 20vh;
+  margin-bottom: 50px;
+  background: url("https://www.transparenttextures.com/patterns/inspiration-geometry.png"),
+    linear-gradient(
+      90deg,
+      rgba(236, 248, 255, 1) 0%,
+      rgba(120, 159, 255, 0.8018557764902836) 100%
+    );
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const HeaderContainer = styled.div`
+  width: 82%;
+  display: flex;
+  align-items: center;
   h1 {
-    width: 82%;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 700;
     color: #504e49;
+  }
+  box-icon {
+    width: 30px;
+    height: 30px;
+    margin: 2px 20px 0 10px;
   }
 `;
 

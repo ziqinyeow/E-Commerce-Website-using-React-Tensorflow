@@ -89,6 +89,26 @@ const store = [
     follower: 5320,
     response: 95,
   },
+  {
+    id: "store0010",
+    key: "store0010",
+    name: "Hisense",
+    url: "data:image/png;base64,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",
+    active: 6,
+    joined: 2,
+    follower: 1320,
+    response: 96,
+  },
+  {
+    id: "store0011",
+    key: "store0011",
+    name: "Sony",
+    url: "https://www.sony.net/top/2017/img/icon/top-og.jpg",
+    active: 2,
+    joined: 1,
+    follower: 10920,
+    response: 96,
+  },
 ];
 
 export default store;
