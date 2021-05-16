@@ -91,7 +91,7 @@ function ProductCard({
                 <box-icon
                   type="solid"
                   name="cart-add"
-                  color="white"
+                  color="#504e49"
                   animation="tada-hover"
                 ></box-icon>
                 <span>Add To Cart</span>
@@ -99,7 +99,7 @@ function ProductCard({
               <SavedContainer onClick={Saved}>
                 <box-icon
                   name="heart"
-                  color="#434a5e"
+                  color="#6b63ffcc"
                   animation="tada-hover"
                 ></box-icon>
               </SavedContainer>
@@ -132,6 +132,11 @@ const Line = styled.div`
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
   transition: all 0.5s ease;
+  background: linear-gradient(
+    90deg,
+    rgba(236, 248, 255, 1) 0%,
+    rgba(120, 159, 255, 0.8018557764902836) 100%
+  );
 `;
 
 const ImageContainer = styled.div`
@@ -218,8 +223,14 @@ const AddToCartContainer = styled.div`
   background-color: #504e49;
   /* background-color: #333438ce; */
   /* background-color: #6b63ffcc; */
+  background: linear-gradient(
+    90deg,
+    rgba(236, 248, 255, 1) 0%,
+    rgba(120, 159, 255, 0.8018557764902836) 100%
+  );
   border-radius: 8px;
   color: white;
+  color: #504e49;
   border: none;
   outline: none;
   cursor: pointer;

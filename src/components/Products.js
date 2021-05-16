@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import ProductCard from "./ProductCard";
@@ -21,7 +21,7 @@ function Products() {
     }
     return array;
   };
-  const products = [...bag, ...television, ...clothing, ...sport];
+  const products = [...sport, ...television, ...clothing, ...bag];
   shuffle(bag);
   shuffle(television);
   shuffle(clothing);

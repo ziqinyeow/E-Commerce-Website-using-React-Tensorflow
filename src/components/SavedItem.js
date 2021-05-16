@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useStateValue } from "../StateProvider";
 
@@ -12,35 +12,12 @@ function CartItem({
   producedBy,
   year,
   rating,
-  bcolor,
-  color,
-  quantity,
 }) {
-  const [quan, setQuantity] = useState(quantity);
   const [{ basket, user }, dispatch] = useStateValue();
-
-  useEffect(() => {
-    dispatch({
-      type: "UPDATE_QUANTITY",
-      item: {
-        id: id,
-        quantity: quan,
-      },
-    });
-  }, [quan]);
-  const IncQuantity = () => {
-    setQuantity(quan + 1);
-  };
-
-  const DecQuantity = () => {
-    if (quan > 1) {
-      setQuantity(quan - 1);
-    }
-  };
 
   const deleteItem = () => {
     dispatch({
-      type: "REMOVE_FROM_BASKET",
+      type: "REMOVE_FROM_SAVED",
       item: {
         id: id,
       },
@@ -68,27 +45,12 @@ function CartItem({
                 <box-icon name="star" color="#737373"></box-icon>
               ))}
           </Rating>
-          <QuantityContainer>
-            <QuantityWrap>
-              <box-icon
-                name="minus"
-                color="#504e49"
-                onClick={DecQuantity}
-              ></box-icon>
-              <span>{quantity}</span>
-              <box-icon
-                name="plus"
-                color="#504e49"
-                onClick={IncQuantity}
-              ></box-icon>
-            </QuantityWrap>
-          </QuantityContainer>
         </Information>
       </ItemInformation>
       <PriceContainer>
         <PriceWrap>
           <h6>
-            <span>RM </span> {(Math.round(price * quan * 100) / 100).toFixed(2)}
+            <span>RM </span> {(Math.round(price * 100) / 100).toFixed(2)}
           </h6>
         </PriceWrap>
         <ButtonContainer onClick={deleteItem}>
