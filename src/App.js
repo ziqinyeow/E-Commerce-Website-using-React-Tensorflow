@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useHistory,
+} from "react-router-dom";
+import * as mobilenet from "@tensorflow-models/mobilenet";
 import styled from "styled-components";
+import allProducts from "./data/all";
+import { shuffle, similarity, editDistance } from "./functions/ArrayFunction";
 import Sidebar from "./components/Sidebar";
-import Home from "./components/Home";
 import Header from "./components/Header";
+import Home from "./components/Home";
 import Products from "./components/Products";
 import Explore from "./components/Explore";
 import Saved from "./components/Saved";
@@ -13,18 +21,52 @@ import ProductScreen from "./components/ProductScreen";
 import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
-  const shuffle = (array) => {
-    var currentIndex = array.length,
-      temporaryValue,
-      randomIndex;
-    while (0 !== currentIndex) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
+  const history = useHistory();
+  const [search, setSearch] = useState("");
+  const [result, setResult] = useState([]);
+
+  const [isModelLoading, setIsModelLoading] = useState(false);
+  const [model, setModel] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
+
+  const loadModel = async () => {
+    setIsModelLoading(true);
+    try {
+      const model = await mobilenet.load();
+      setModel(model);
+      setIsModelLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsModelLoading(false);
     }
-    return array;
+  };
+
+  useEffect(() => {
+    loadModel();
+  }, []);
+
+  if (isModelLoading) {
+  }
+
+  const handleSearch = (input) => {
+    input = input.toLowerCase();
+    if (
+      input.substring(0, 8) === "https://" ||
+      input.substring(0, 7) === "http://"
+    ) {
+    }
+    setSearch(input);
+    const exact = allProducts?.filter((found) => {
+      return (
+        found.fullName.toLowerCase().includes(input) ||
+        found.color.toLowerCase().includes(input)
+      );
+    });
+    setResult([...exact]);
+  };
+
+  const uploadImg = (image) => {
+    setImageURL(image);
   };
 
   return (
@@ -34,10 +76,12 @@ function App() {
         <SidebarOverlay></SidebarOverlay>
         <Switch>
           <Main>
-            <Header />
+            <Header search={handleSearch} upload={uploadImg} />
             <HeaderOverlay></HeaderOverlay>
             <Route path="/products/all" exact>
-              <Products />
+              <Products
+                products={search?.length === 0 ? allProducts : result}
+              />
             </Route>
             <ScrollToTop>
               <Route path="/products/all/:id" exact>

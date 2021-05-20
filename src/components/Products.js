@@ -2,30 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import ProductCard from "./ProductCard";
-import bag from "../data/bag";
-import television from "../data/television";
-import clothing from "../data/clothing";
-import sport from "../data/sport";
+import productNotFound from "../svg/productNotFound.svg";
 
-function Products() {
-  const shuffle = (array) => {
-    var currentIndex = array.length,
-      temporaryValue,
-      randomIndex;
-    while (0 !== currentIndex) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-    return array;
-  };
-  const products = [...sport, ...television, ...clothing, ...bag];
-  shuffle(bag);
-  shuffle(television);
-  shuffle(clothing);
-  shuffle(sport);
+function Products({ products }) {
   return (
     <Container>
       <Header>
@@ -39,28 +18,35 @@ function Products() {
           <h1>Products</h1>
         </HeaderContainer>
       </Header>
-      <ProductContainer>
-        {products?.map((product) => (
-          <Link
-            style={{ textDecoration: "none" }}
-            to={`/products/all/${product.id}`}
-          >
-            <ProductCard
-              id={product.id}
-              name={product.name}
-              fullName={product.fullName}
-              description={product.description}
-              image={product.url}
-              price={product.price}
-              producedBy={product.producedBy}
-              year={product.year}
-              rating={product.rating}
-              bcolor={product.bcolor}
-              color={product.color}
-            />
-          </Link>
-        ))}
-      </ProductContainer>
+      {products.length !== 0 ? (
+        <ProductContainer>
+          {products?.map((product) => (
+            <Link
+              style={{ textDecoration: "none" }}
+              to={`/products/all/${product.id}`}
+            >
+              <ProductCard
+                id={product.id}
+                name={product.name}
+                fullName={product.fullName}
+                description={product.description}
+                image={product.url}
+                price={product.price}
+                producedBy={product.producedBy}
+                year={product.year}
+                rating={product.rating}
+                bcolor={product.bcolor}
+                color={product.color}
+              />
+            </Link>
+          ))}
+        </ProductContainer>
+      ) : (
+        <ProductNotFoundContainer>
+          <img src={productNotFound} alt="" />
+          <h3>Product Not Found</h3>
+        </ProductNotFoundContainer>
+      )}
     </Container>
   );
 }
@@ -122,5 +108,23 @@ const ProductContainer = styled.div`
   }
   @media screen and (max-width: 638px) {
     grid-template-columns: repeat(1, 1fr);
+  }
+`;
+
+const ProductNotFoundContainer = styled.div`
+  width: 100%;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  img {
+    width: 200px;
+    margin-bottom: 30px;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #434a5e;
   }
 `;
