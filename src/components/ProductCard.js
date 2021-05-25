@@ -16,7 +16,7 @@ function ProductCard({
   bcolor,
   color,
 }) {
-  const [{ basket, saved }, dispatch] = useStateValue();
+  const [{ user }, dispatch] = useStateValue();
   const AddToCart = (e) => {
     dispatch({
       type: "ADD_TO_BASKET",

@@ -20,12 +20,13 @@ function Products({ products }) {
       </Header>
       {products.length !== 0 ? (
         <ProductContainer>
-          {products?.map((product) => (
+          {products?.map((product, index) => (
             <Link
               style={{ textDecoration: "none" }}
               to={`/products/all/${product.id}`}
             >
               <ProductCard
+                key={index}
                 id={product.id}
                 name={product.name}
                 fullName={product.fullName}

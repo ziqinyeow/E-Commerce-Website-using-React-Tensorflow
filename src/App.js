@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -9,7 +9,6 @@ import {
 import * as mobilenet from "@tensorflow-models/mobilenet";
 import styled from "styled-components";
 import allProducts from "./data/all";
-import { shuffle, similarity, editDistance } from "./functions/ArrayFunction";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -25,49 +24,27 @@ function App() {
   const [search, setSearch] = useState("");
   const [result, setResult] = useState([]);
 
-  const [isModelLoading, setIsModelLoading] = useState(false);
-  const [model, setModel] = useState(null);
-  const [imageURL, setImageURL] = useState(null);
-
-  const loadModel = async () => {
-    setIsModelLoading(true);
-    try {
-      const model = await mobilenet.load();
-      setModel(model);
-      setIsModelLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsModelLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadModel();
-  }, []);
-
-  if (isModelLoading) {
-  }
-
   const handleSearch = (input) => {
-    input = input.toLowerCase();
     if (
       input.substring(0, 8) === "https://" ||
       input.substring(0, 7) === "http://"
     ) {
     }
+    input = input.toLowerCase();
     setSearch(input);
     const exact = allProducts?.filter((found) => {
       return (
         found.fullName.toLowerCase().includes(input) ||
-        found.color.toLowerCase().includes(input)
+        found.color.toLowerCase().includes(input) ||
+        found.id.toLowerCase().includes(input) ||
+        found.brand.toLowerCase().includes(input) ||
+        found.url.toLowerCase().includes(input)
       );
     });
     setResult([...exact]);
   };
 
-  const uploadImg = (image) => {
-    setImageURL(image);
-  };
+  const uploadImg = () => {};
 
   return (
     <Router>
@@ -78,6 +55,7 @@ function App() {
           <Main>
             <Header search={handleSearch} upload={uploadImg} />
             <HeaderOverlay></HeaderOverlay>
+
             <Route path="/products/all" exact>
               <Products
                 products={search?.length === 0 ? allProducts : result}

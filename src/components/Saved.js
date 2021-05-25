@@ -1,14 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { useStateValue } from "../StateProvider";
-import { getBasketTotal } from "../reducer";
 import { Link } from "react-router-dom";
 import SavedItem from "./SavedItem";
 import emptySaved from "../svg/emptysaved.svg";
 import cravingForMore from "../svg/cravingformore.svg";
 
 function Cart() {
-  const [{ basket, saved, user }, dispatch] = useStateValue();
+  const [{ saved }] = useStateValue();
   return (
     <Container>
       <Header>

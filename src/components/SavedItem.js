@@ -135,36 +135,6 @@ const Rating = styled.div`
   }
 `;
 
-const QuantityContainer = styled.div`
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-`;
-
-const QuantityWrap = styled.div`
-  width: 150px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 2px solid #504e49;
-  box-icon {
-    cursor: pointer;
-    border-left: 1px solid #504e49;
-    border-right: 1px solid #504e49;
-  }
-  span {
-    width: 50%;
-    height: 100%;
-    margin-bottom: 2px;
-    color: #504e49;
-    font-size: 20px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-`;
 const PriceContainer = styled.div`
   width: 30%;
   height: 100%;

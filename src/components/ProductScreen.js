@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory, useParams } from "react-router-dom";
 import { useStateValue } from "../StateProvider";
@@ -16,7 +16,7 @@ function ProductScreen() {
   const products = [...bag, ...television, ...clothing, ...sport];
   const product = products.find((x) => x.id === params.id);
   const [quantity, setQuantity] = useState(1);
-  const [{ basket, user }, dispatch] = useStateValue();
+  const [{ user }, dispatch] = useStateValue();
   const history = useHistory();
 
   if (!product) {
