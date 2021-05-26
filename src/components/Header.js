@@ -15,27 +15,33 @@ function Header({ search, upload }) {
   const [model, setModel] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [imageInput, setImageInput] = useState(false);
+  const [isImage, setIsImage] = useState(false);
   const [identifyBtn, setIdentifyBtn] = useState(false);
+  const [boxDisplay, setBoxDisplay] = useState(true);
   const [results, setResults] = useState([]);
   const imageRef = useRef();
 
   const handleChange = (event) => {
     event.preventDefault();
     setInput(event.target.value);
-
+    setBoxDisplay(true);
     if (input.length >= 0) {
       history.push("/products/all");
     }
     if (
-      event.target.value.substring(0, 8) === "https://" ||
-      event.target.value.substring(0, 7) === "http://" ||
+      ((event.target.value.substring(0, 8) === "https://" ||
+        event.target.value.substring(0, 7) === "http://") &&
+        event.target.value.match(/\.(jpeg|jpg|gif|png)$/) != null) ||
       event.target.value.substring(0, 10) === "data:image"
     ) {
       setImageURL(event.target.value);
+      setIsImage(true);
       setImageInput(true);
     } else {
       setImageInput(false);
       setIdentifyBtn(false);
+      setIsImage(false);
+      setImageURL(null);
       setResults([]);
       search(event.target.value);
     }
@@ -44,6 +50,12 @@ function Header({ search, upload }) {
   useEffect(() => {
     loadModel();
   }, []);
+
+  useEffect(() => {
+    setIdentifyBtn(false);
+    setBoxDisplay(true);
+    setResults([]);
+  }, [imageURL]);
 
   const loadModel = async () => {
     setIsModelLoading(true);
@@ -59,27 +71,35 @@ function Header({ search, upload }) {
 
   const uploadImage = (e) => {
     const { files } = e.target;
+    setBoxDisplay(true);
     if (files.length > 0) {
       const url = URL.createObjectURL(files[0]);
       setImageURL(url);
+      setInput("");
+      history.push("/products/all");
     } else {
       setImageURL(null);
+    }
+    if (imageURL !== null) {
+      setImageInput(false);
+      setIsImage(false);
+      setImageInput(true);
+      setIsImage(true);
+    } else {
+      setImageInput(true);
+      setIsImage(true);
     }
   };
 
   const identify = async () => {
-    setIdentifyBtn(true);
-    const results = await model.classify(imageRef.current);
-    setResults(results);
+    try {
+      setIdentifyBtn(true);
+      const results = await model.classify(imageRef.current);
+      setResults(results);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  // useEffect(() => {
-  //   try {
-  //     identify();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, [imageURL]);
 
   return (
     <BigContainer>
@@ -97,7 +117,19 @@ function Header({ search, upload }) {
               onChange={handleChange}
               value={input}
             />
-
+            <Cross
+              style={{ display: input.length > 0 ? "" : "none" }}
+              onClick={() => {
+                setInput("");
+                search("");
+              }}
+            >
+              <box-icon
+                name="x"
+                color="#504e49"
+                animation="tada-hover"
+              ></box-icon>
+            </Cross>
             <input
               type="file"
               accept="image/*"
@@ -122,24 +154,51 @@ function Header({ search, upload }) {
                 <span className={visible ? "show" : ""}>
                   Upload product related image for search
                 </span>
-                {imageURL && (
-                  <img
-                    src={imageURL}
-                    alt="Upload Preview"
-                    ref={imageRef}
-                    crossOrigin="anonymous"
-                    style={{ display: "none" }}
-                  />
-                )}
               </UploadImgDescription>
             </label>
-            {imageInput && (
+            {imageInput && boxDisplay && (
               <ImageButtonContainer
                 style={{
                   width: identifyBtn ? "100%" : "50%",
                   left: identifyBtn ? "0" : "20%",
                 }}
               >
+                <Refresh
+                  style={{ display: identifyBtn ? "" : "none" }}
+                  onClick={identify}
+                >
+                  <box-icon
+                    name="refresh"
+                    color="#504e49"
+                    animation="spin-hover"
+                  ></box-icon>
+                </Refresh>
+                <CloseImageContainer
+                  style={{ display: identifyBtn ? "" : "none" }}
+                  onClick={() => {
+                    setBoxDisplay(false);
+                    setInput("");
+                    setImageInput(false);
+                    setIdentifyBtn(false);
+                    setImageURL(null);
+                    setResults([]);
+                    search("");
+                  }}
+                >
+                  <box-icon
+                    name="x"
+                    color="#504e49"
+                    animation="tada-hover"
+                  ></box-icon>
+                </CloseImageContainer>
+                {isImage && (
+                  <img
+                    src={imageURL}
+                    alt="Preview"
+                    ref={imageRef}
+                    crossOrigin="anonymous"
+                  />
+                )}
                 <button
                   style={{ display: identifyBtn ? "none" : "" }}
                   onClick={identify}
@@ -158,7 +217,8 @@ function Header({ search, upload }) {
                       return (
                         <Result
                           onClick={() => {
-                            search(res.className) && setInput(res.className);
+                            search(res.className.replaceAll(",", ""));
+                            setInput(res.className.replaceAll(",", ""));
                           }}
                         >
                           {res.className}{" "}
@@ -288,6 +348,14 @@ const ImageButtonContainer = styled.div`
   background-image: url("https://www.transparenttextures.com/patterns/gplay.png");
   transition: all 1s ease;
 
+  img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
   button {
     outline: none;
     border: none;
@@ -319,6 +387,84 @@ const ImageButtonContainer = styled.div`
     border-width: 5px;
     border-style: solid;
     border-color: #6c63ff transparent transparent transparent;
+  }
+`;
+
+const Cross = styled.div`
+  margin: 5px;
+  padding: 0 0 4px 2px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.5s ease;
+
+  :hover {
+    background-color: #e4e4e4;
+  }
+`;
+
+const Refresh = styled.div`
+  padding-bottom: 2px;
+  position: absolute;
+  top: 10%;
+  right: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: #f3f3f3;
+  transition: all 0.5s ease;
+
+  :hover {
+    background-color: #e4e4e4;
+  }
+  box-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  @media screen and (max-width: 832px) {
+    top: 5%;
+  }
+`;
+
+const CloseImageContainer = styled.div`
+  padding-bottom: 2px;
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: #f3f3f3;
+  transition: all 0.5s ease;
+
+  :hover {
+    background-color: #e4e4e4;
+  }
+  box-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  @media screen and (max-width: 996px) {
+    right: 5%;
+  }
+
+  @media screen and (max-width: 832px) {
+    top: 5%;
+    right: 3%;
   }
 `;
 

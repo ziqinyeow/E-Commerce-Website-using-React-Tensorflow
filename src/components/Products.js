@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ProductCard from "./ProductCard";
 import productNotFound from "../svg/productNotFound.svg";
 
-function Products({ products }) {
+function Products({ products, input }) {
   return (
     <Container>
       <Header>
@@ -45,6 +45,7 @@ function Products({ products }) {
       ) : (
         <ProductNotFoundContainer>
           <img src={productNotFound} alt="" />
+          <h3>{input}</h3>
           <h3>Product Not Found</h3>
         </ProductNotFoundContainer>
       )}

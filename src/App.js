@@ -38,7 +38,7 @@ function App() {
         found.color.toLowerCase().includes(input) ||
         found.id.toLowerCase().includes(input) ||
         found.brand.toLowerCase().includes(input) ||
-        found.url.toLowerCase().includes(input)
+        found.url.toLowerCase().includes(input.replace("http", ""))
       );
     });
     setResult([...exact]);
@@ -59,6 +59,7 @@ function App() {
             <Route path="/products/all" exact>
               <Products
                 products={search?.length === 0 ? allProducts : result}
+                input={search}
               />
             </Route>
             <ScrollToTop>
