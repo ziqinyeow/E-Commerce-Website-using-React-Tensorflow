@@ -5,15 +5,17 @@ import { useStateValue } from "../StateProvider";
 import "boxicons";
 import notFound from "../svg/notfound.svg";
 import review from "../svg/review.svg";
-import bag from "../data/bag";
-import television from "../data/television";
-import clothing from "../data/clothing";
-import sport from "../data/sport";
+// import bag from "../data/bag";
+// import television from "../data/television";
+// import clothing from "../data/clothing";
+// import sport from "../data/sport";
+import allProducts from "../data/all";
 import store from "../data/store";
 
 function ProductScreen() {
   const params = useParams();
-  const products = [...bag, ...television, ...clothing, ...sport];
+  // const products = [...bag, ...television, ...clothing, ...sport];
+  const products = allProducts;
   const product = products.find((x) => x.id === params.id);
   const [quantity, setQuantity] = useState(1);
   const [{ user }, dispatch] = useStateValue();

@@ -9,6 +9,7 @@ import {
 import * as mobilenet from "@tensorflow-models/mobilenet";
 import styled from "styled-components";
 import allProducts from "./data/all";
+import { shuffle } from "./functions/ArrayFunction";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -25,26 +26,46 @@ function App() {
   const [result, setResult] = useState([]);
 
   const handleSearch = (input) => {
-    if (
-      input.substring(0, 8) === "https://" ||
-      input.substring(0, 7) === "http://"
-    ) {
-    }
-    input = input.toLowerCase();
+    input = input.toLowerCase().trim();
     setSearch(input);
-    const exact = allProducts?.filter((found) => {
+    const arr = input.split(" ");
+
+    var all = [];
+
+    var exact = allProducts?.filter((found) => {
+      var temp =
+        found.fullName + " " + found.id + " " + found.brand + " " + found.color;
+      temp = temp.toLowerCase();
       return (
-        found.fullName.toLowerCase().includes(input) ||
-        found.color.toLowerCase().includes(input) ||
-        found.id.toLowerCase().includes(input) ||
-        found.brand.toLowerCase().includes(input) ||
+        arr.every((item) => temp.includes(item)) ||
         found.url.toLowerCase().includes(input.replace("http", ""))
       );
     });
-    setResult([...exact]);
-  };
 
-  const uploadImg = () => {};
+    all.push(...exact);
+
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].length < 2 || arr[i] === "I" || arr[i] === "to") {
+        // all = [];
+        continue;
+      }
+
+      var similar = allProducts?.filter((found) => {
+        return (
+          found.fullName.toLowerCase().includes(arr[i]) ||
+          found.color.toLowerCase().includes(arr[i]) ||
+          found.id.toLowerCase().includes(arr[i]) ||
+          found.brand.toLowerCase().includes(arr[i]) ||
+          found.url.toLowerCase().includes(input.replace("http", ""))
+        );
+      });
+      all.push(...similar);
+    }
+
+    all = [...new Set(all)];
+    // shuffle(all);
+    setResult([...all]);
+  };
 
   return (
     <Router>
@@ -53,7 +74,7 @@ function App() {
         <SidebarOverlay></SidebarOverlay>
         <Switch>
           <Main>
-            <Header search={handleSearch} upload={uploadImg} />
+            <Header search={handleSearch} />
             <HeaderOverlay></HeaderOverlay>
 
             <Route path="/products/all" exact>

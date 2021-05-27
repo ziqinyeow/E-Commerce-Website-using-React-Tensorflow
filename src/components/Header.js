@@ -5,7 +5,15 @@ import "boxicons";
 import { Link, useHistory } from "react-router-dom";
 import { useStateValue } from "../StateProvider";
 
-function Header({ search, upload }) {
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+const mic = new SpeechRecognition();
+
+mic.continuous = true;
+mic.interimResults = true;
+mic.lang = "en-US";
+
+function Header({ search }) {
   const [{ basket, user }, dispatch] = useStateValue();
   const [input, setInput] = useState("");
   const [visible, setVisible] = useState(false);
@@ -21,6 +29,30 @@ function Header({ search, upload }) {
   const [results, setResults] = useState([]);
   const imageRef = useRef();
 
+  const [isListening, setIsListening] = useState(false);
+  const [note, setNote] = useState(null);
+
+  useEffect(() => {
+    loadModel();
+  }, []);
+
+  useEffect(() => {
+    setIdentifyBtn(false);
+    setBoxDisplay(true);
+    setResults([]);
+  }, [imageURL]);
+
+  useEffect(() => {
+    handleListen();
+  }, [isListening]);
+
+  useEffect(() => {
+    if (note !== null) {
+      setInput(note);
+      search(note);
+    }
+  }, [note]);
+
   const handleChange = (event) => {
     event.preventDefault();
     setInput(event.target.value);
@@ -31,7 +63,8 @@ function Header({ search, upload }) {
     if (
       ((event.target.value.substring(0, 8) === "https://" ||
         event.target.value.substring(0, 7) === "http://") &&
-        event.target.value.match(/\.(jpeg|jpg|gif|png)$/) != null) ||
+        (event.target.value.match(/\.(jpeg|jpg|gif|png)$/) != null ||
+          event.target.value.includes("image"))) ||
       event.target.value.substring(0, 10) === "data:image"
     ) {
       setImageURL(event.target.value);
@@ -46,16 +79,6 @@ function Header({ search, upload }) {
       search(event.target.value);
     }
   };
-
-  useEffect(() => {
-    loadModel();
-  }, []);
-
-  useEffect(() => {
-    setIdentifyBtn(false);
-    setBoxDisplay(true);
-    setResults([]);
-  }, [imageURL]);
 
   const loadModel = async () => {
     setIsModelLoading(true);
@@ -96,9 +119,38 @@ function Header({ search, upload }) {
       setIdentifyBtn(true);
       const results = await model.classify(imageRef.current);
       setResults(results);
-    } catch (error) {
-      console.log(error);
+    } catch (error) {}
+  };
+
+  const handleListen = () => {
+    if (isListening) {
+      mic.start();
+      mic.onend = () => {
+        console.log("Continue");
+        mic.start();
+      };
+    } else {
+      mic.stop();
+      mic.onend = () => {
+        console.log("Stopped Mic on Click");
+      };
     }
+
+    mic.onstart = () => {
+      console.log("Mics on");
+    };
+
+    mic.onresult = (event) => {
+      const transcript = Array.from(event.results)
+        .map((result) => result[0])
+        .map((result) => result.transcript)
+        .join("");
+      console.log(transcript);
+      setNote(transcript);
+      mic.onerror = (event) => {
+        console.log(event.error);
+      };
+    };
   };
 
   return (
@@ -118,10 +170,13 @@ function Header({ search, upload }) {
               value={input}
             />
             <Cross
-              style={{ display: input.length > 0 ? "" : "none" }}
+              style={{ visibility: input.length > 0 ? "" : "hidden" }}
               onClick={() => {
                 setInput("");
                 search("");
+                setBoxDisplay(false);
+                setNote("");
+                setIsListening(false);
               }}
             >
               <box-icon
@@ -130,6 +185,13 @@ function Header({ search, upload }) {
                 animation="tada-hover"
               ></box-icon>
             </Cross>
+            {/* <Paste>
+              <box-icon
+                name="paste"
+                color="#5469d4"
+                animation="tada-hover"
+              ></box-icon>
+            </Paste> */}
             <input
               type="file"
               accept="image/*"
@@ -151,11 +213,26 @@ function Header({ search, upload }) {
                 animation="tada-hover"
               ></box-icon>
               <UploadImgDescription>
-                <span className={visible ? "show" : ""}>
-                  Upload product related image for search
-                </span>
+                <span className={visible ? "show" : ""}>Search by Image</span>
               </UploadImgDescription>
             </label>
+            <Mic onClick={() => setIsListening((prevState) => !prevState)}>
+              {!isListening && (
+                <box-icon
+                  type="solid"
+                  name="microphone-off"
+                  color="#5469d4"
+                ></box-icon>
+              )}
+              {isListening && (
+                <box-icon
+                  type="solid"
+                  name="microphone"
+                  color="#5469d4"
+                  animation="tada"
+                ></box-icon>
+              )}
+            </Mic>
             {imageInput && boxDisplay && (
               <ImageButtonContainer
                 style={{
@@ -177,12 +254,10 @@ function Header({ search, upload }) {
                   style={{ display: identifyBtn ? "" : "none" }}
                   onClick={() => {
                     setBoxDisplay(false);
-                    setInput("");
                     setImageInput(false);
                     setIdentifyBtn(false);
                     setImageURL(null);
                     setResults([]);
-                    search("");
                   }}
                 >
                   <box-icon
@@ -194,7 +269,7 @@ function Header({ search, upload }) {
                 {isImage && (
                   <img
                     src={imageURL}
-                    alt="Preview"
+                    alt="Image blocked by CORS Policy"
                     ref={imageRef}
                     crossOrigin="anonymous"
                   />
@@ -290,6 +365,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: transparent;
 `;
 
 const Searchbar = styled.div`
@@ -298,7 +374,8 @@ const Searchbar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0.7;
+  flex: 0.8;
+  background: transparent;
 
   input {
     width: 90%;
@@ -309,6 +386,7 @@ const Searchbar = styled.div`
     font-size: 14px;
     font-weight: 600;
     color: #434a5e;
+    background: transparent;
   }
 
   box-icon {
@@ -327,10 +405,36 @@ const Form = styled.div`
   width: 75%;
   height: 100%;
   position: relative;
+  background: transparent;
 
   label {
     position: relative;
   }
+`;
+
+const Cross = styled.div`
+  margin: 5px;
+  padding: 0 0 4px 2px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.5s ease;
+
+  :hover {
+    background-color: #e4e4e4;
+  }
+`;
+
+const Paste = styled.div`
+  margin: 0 13px 0 8px;
+`;
+
+const Mic = styled.div`
+  margin: 0 15px;
 `;
 
 const ImageButtonContainer = styled.div`
@@ -387,23 +491,6 @@ const ImageButtonContainer = styled.div`
     border-width: 5px;
     border-style: solid;
     border-color: #6c63ff transparent transparent transparent;
-  }
-`;
-
-const Cross = styled.div`
-  margin: 5px;
-  padding: 0 0 4px 2px;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.5s ease;
-
-  :hover {
-    background-color: #e4e4e4;
   }
 `;
 
