@@ -13,7 +13,9 @@
 ### CodeSandBox Demo
 
 <a href="https://codesandbox.io/s/e-commerce-web-application-gy21f"> Check this out </a>
+<br>
 All the style is written using styled-components in .js file.
+<br>
 Svg illustration are contributed by <a href="https://undraw.co/illustrations"> Undraw </a>
 <br>
 
