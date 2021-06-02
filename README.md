@@ -21,16 +21,21 @@ Svg illustration are contributed by <a href="https://undraw.co/illustrations"> U
 
 ### Searching Process
 
-The searchbar allows the input of product name, brand, color and image address.
+The search bar allows the input of product name, brand, colour and image address.
 <br>
-While inputing product name, brand and color, the webpage directly route you to the product page and the array of specific item is being displayed.
 <br>
-While inputing image address, the image identification box directly pop up using certain javascript regular expression. You can then press the identify image button, within 20ms inteference time of the MobileNet v2 model, an array of 3 prediction results are being displayed by the probability.
+While inputting product name, brand and colour, the webpage directly routes you to the product page, and the array of a specific item is being displayed.
 <br>
-There are certain image URL blocked by the cross-origin policy (CORS policy). Apart from that, user can also provide an image file input to the browser for image classification.
+<br>
+While inputting the image address, the image identification box directly pops up using a particular javascript regular expression. You can then press the identify image button; within the 20ms interference time of the MobileNet v2 model, an array of 3 prediction results are being displayed by the probability.
+<br>
+<br>
+There are particular image URL blocked by the cross-origin policy (CORS policy). The user can also provide an image file input to the browser for image classification.
+<br>
 
 ### Brief Intro of Tensorflow JS MobileNet
 
-MobileNet-v2 is a convolutional neural network that is 53 layers deep. You can load a pretrained version of the network trained on more than a million images from the ImageNet database. The pretrained network can classify images into 1000 object categories, such as keyboard, mouse, pencil, and many animals. As a result, the network has learned rich feature representations for a wide range of images. 
+MobileNet-v2 is a convolutional neural network that is 53 layers deep. You can load a pre-trained version of the network trained on more than a million images from the ImageNet database. The pre-trained network can classify images into 1000 object categories, such as keyboard, mouse, pencil, and many animals. As a result, the network has learned rich feature representations for a wide range of images. 
 
-MobileNet-v2 image classification for javascript from Tensorflow JS library provide an eye-opening interactivity for the users or clients without any installation. This is the model that runs directly in the browser and the data input stays only at the client side, this greatly secure the privacy of the clients or users. Accurate results is provided for the users in the vast decrease in time(20ms inteference time) and better performance experience compared to VGG-16(OxfordNet). Even the species of the animal can be determined by the model.
+MobileNet-v2 image classification for javascript from Tensorflow JS library provides eye-opening interactivity for the users or clients without any installation. This is the model that runs directly in the browser, and the data input stays only at the client side; this significantly secures the privacy of the clients or users. Accurate results are provided for the users in the vast decrease in time(20ms interference time) and better performance experience than VGG-16(OxfordNet). The model can determine even the species of the animal.
+
