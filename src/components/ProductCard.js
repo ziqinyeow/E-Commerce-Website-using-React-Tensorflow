@@ -69,7 +69,7 @@ function ProductCard({
         <Wrap>
           <TextContainer>
             <h4>{name}</h4>
-            {/* <Rating>
+            <Rating>
               {Array(rating)
                 .fill()
                 .map((_, i) => (
@@ -80,7 +80,7 @@ function ProductCard({
                 .map((_, i) => (
                   <box-icon name="star" color="#737373"></box-icon>
                 ))}
-            </Rating> */}
+            </Rating>
             <h6>
               <span>RM</span> {(Math.round(price * 100) / 100).toFixed(2)}
             </h6>

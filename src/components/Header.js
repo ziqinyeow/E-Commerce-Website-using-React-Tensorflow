@@ -126,13 +126,13 @@ function Header({ search }) {
     if (isListening) {
       mic.start();
       mic.onend = () => {
-        console.log("Continue");
+        // console.log("Continue");
         mic.start();
       };
     } else {
       mic.stop();
       mic.onend = () => {
-        console.log("Stopped Mic on Click");
+        // console.log("Stopped Mic on Click");
       };
     }
 
@@ -145,8 +145,9 @@ function Header({ search }) {
         .map((result) => result[0])
         .map((result) => result.transcript)
         .join("");
-      console.log(transcript);
+      // console.log(transcript);
       setNote(transcript);
+      history.push("/products/all");
       mic.onerror = (event) => {
         console.log(event.error);
       };

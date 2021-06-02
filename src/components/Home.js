@@ -4,6 +4,7 @@ import PromotionSection from "./PromotionSection";
 import CategoriesSection from "./CategoriesSection";
 import WelcomeSection from "./WelcomeSection";
 import HomeSlider from "./HomeSlider";
+import UnderConstruction from "./UnderConstruction";
 
 function Home() {
   return (
@@ -12,6 +13,7 @@ function Home() {
       <HomeSlider />
       <CategoriesSection />
       <PromotionSection />
+      <UnderConstruction />
     </Container>
   );
 }

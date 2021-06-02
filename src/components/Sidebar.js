@@ -63,22 +63,26 @@ function Sidebar() {
               <Tooltip>Saved</Tooltip>
             </IconContainer>
           </Link>
-          <IconContainer>
-            <box-icon
-              name="user-voice"
-              color="#434a5e"
-              animation="tada-hover"
-            ></box-icon>
-            <Tooltip>After Sales</Tooltip>
-          </IconContainer>
-          <IconContainer>
-            <box-icon
-              name="pie-chart"
-              color="#434a5e"
-              animation="tada-hover"
-            ></box-icon>
-            <Tooltip>Analytics</Tooltip>
-          </IconContainer>
+          <Link to="/aftersales" style={{ textDecoration: "none" }}>
+            <IconContainer>
+              <box-icon
+                name="user-voice"
+                color="#434a5e"
+                animation="tada-hover"
+              ></box-icon>
+              <Tooltip>After Sales</Tooltip>
+            </IconContainer>
+          </Link>
+          <Link to="/analytics" style={{ textDecoration: "none" }}>
+            <IconContainer>
+              <box-icon
+                name="pie-chart"
+                color="#434a5e"
+                animation="tada-hover"
+              ></box-icon>
+              <Tooltip>Analytics</Tooltip>
+            </IconContainer>
+          </Link>
         </IconsContainer>
         <BottomIconsContainer>
           <BottomIconContainer>

@@ -19,6 +19,10 @@ import Saved from "./components/Saved";
 import Cart from "./components/Cart";
 import ProductScreen from "./components/ProductScreen";
 import ScrollToTop from "./components/ScrollToTop";
+import UnderConstruction from "./components/UnderConstruction";
+import Signup from "./components/Signup";
+import Aftersales from "./components/Aftersales";
+import Analytics from "./components/Analytics";
 
 function App() {
   const history = useHistory();
@@ -96,6 +100,15 @@ function App() {
             </Route>
             <Route path="/cart" exact>
               <Cart />
+            </Route>
+            <Route path="/signup">
+              <Signup />
+            </Route>
+            <Route path="/aftersales">
+              <Aftersales />
+            </Route>
+            <Route path="/analytics">
+              <Analytics />
             </Route>
             <Route path="/" exact>
               <Home />
