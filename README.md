@@ -12,11 +12,11 @@
 
 ### CodeSandBox Demo
 
-<a href="https://codesandbox.io/s/e-commerce-web-application-gy21f"> Check this out </a>
+<a href="https://codesandbox.io/s/e-commerce-web-application-gy21f" target="_blank"> Check this out </a>
 <br>
 All the style is written using styled-components in .js file.
 <br>
-Svg illustration are contributed by <a href="https://undraw.co/illustrations"> Undraw </a>
+Svg illustration are contributed by <a href="https://undraw.co/illustrations" target="_blank"> Undraw </a>
 <br>
 
 ### Searching Process
