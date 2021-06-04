@@ -8,6 +8,7 @@ const store = [
     joined: 2,
     follower: 5225,
     response: 99,
+    messages: ["Hello there"],
   },
   {
     id: "store0002",
@@ -18,6 +19,7 @@ const store = [
     joined: 1,
     follower: 4033,
     response: 99,
+    messages: ["Hello there"],
   },
   {
     id: "store0003",
@@ -28,6 +30,7 @@ const store = [
     joined: 2,
     follower: 10233,
     response: 98,
+    messages: ["Hello there"],
   },
   {
     id: "store0004",
@@ -38,6 +41,7 @@ const store = [
     joined: 1,
     follower: 3203,
     response: 97,
+    messages: ["Hello there"],
   },
   {
     id: "store0005",
@@ -48,6 +52,7 @@ const store = [
     joined: 2,
     follower: 12033,
     response: 98,
+    messages: ["Hello there"],
   },
   {
     id: "store0006",
@@ -58,6 +63,7 @@ const store = [
     joined: 2,
     follower: 2029,
     response: 99,
+    messages: ["Hello there"],
   },
   {
     id: "store0007",
@@ -68,6 +74,7 @@ const store = [
     joined: 2,
     follower: 18209,
     response: 95,
+    messages: ["Hello there"],
   },
   {
     id: "store0008",
@@ -78,6 +85,7 @@ const store = [
     joined: 2,
     follower: 1320,
     response: 95,
+    messages: ["Hello there"],
   },
   {
     id: "store0009",
@@ -88,6 +96,7 @@ const store = [
     joined: 2,
     follower: 5320,
     response: 95,
+    messages: ["Hello there"],
   },
   {
     id: "store0010",
@@ -98,6 +107,7 @@ const store = [
     joined: 2,
     follower: 1320,
     response: 96,
+    messages: ["Hello there"],
   },
   {
     id: "store0011",
@@ -108,6 +118,7 @@ const store = [
     joined: 1,
     follower: 10920,
     response: 96,
+    messages: ["Hello there"],
   },
 ];
 
