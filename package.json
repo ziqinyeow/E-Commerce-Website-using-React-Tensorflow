@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@tensorflow-models/mobilenet": "^2.1.0",
+    "@tensorflow-models/qna": "^1.0.0",
+    "@tensorflow/tfjs": "^2.4.0",
     "@tensorflow/tfjs-converter": "^1.2.1",
     "@tensorflow/tfjs-core": "^1.2.1",
     "boxicons": "^2.0.7",
@@ -11,6 +13,7 @@
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-scrollable-feed": "^1.3.1",
     "styled-components": "^5.2.3",
     "web-vitals": "^1.1.1"
   },

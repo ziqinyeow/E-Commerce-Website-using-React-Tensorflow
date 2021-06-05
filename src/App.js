@@ -6,7 +6,7 @@ import {
   Route,
   useHistory,
 } from "react-router-dom";
-import * as mobilenet from "@tensorflow-models/mobilenet";
+// import * as mobilenet from "@tensorflow-models/mobilenet";
 import styled from "styled-components";
 import allProducts from "./data/all";
 import { shuffle } from "./functions/ArrayFunction";

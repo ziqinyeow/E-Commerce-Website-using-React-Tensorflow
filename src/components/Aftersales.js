@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+// import * as tf from "@tensorflow/tfjs";
+import * as qna from "@tensorflow-models/qna";
+import ReactScrollableFeed from "react-scrollable-feed";
 import styled from "styled-components";
 import stores from "../data/store";
 import storeNameNotFound from "../svg/storenamenotfound.svg";
@@ -11,6 +14,19 @@ function Aftersales() {
   const [messageInput, setMessageInput] = useState("");
   const [currentStore, setCurrentStore] = useState({});
   const [lastMessage, setLastMessage] = useState("");
+  const [qnaModel, setQnaModel] = useState(null);
+  const [counter, setCounter] = useState(0);
+  const [passageBoxDisplay, setPassageBoxDisplay] = useState(false);
+
+  const loadQnaModel = async () => {
+    const loadedModel = await qna.load();
+    setQnaModel(loadedModel);
+  };
+
+  useEffect(() => {
+    loadQnaModel();
+    console.log(qnaModel);
+  }, []);
 
   const handleSearch = (event) => {
     const { value } = event.target;
@@ -30,18 +46,59 @@ function Aftersales() {
     event.preventDefault();
     if (messageInput !== "") {
       setLastMessage(messageInput);
-      currentStore?.messages.push(messageInput);
+      currentStore?.messages.push({
+        type: "user",
+        message: messageInput,
+        time: getTime(new Date()),
+      });
+      setCounter((p) => p + 1);
       setMessageInput("");
     }
   };
 
-  useEffect(() => {
-    console.log(lastMessage);
-  }, [lastMessage]);
+  const answerQuestion = async () => {
+    if (qnaModel !== null && lastMessage !== null) {
+      const answer = await qnaModel.findAnswers(
+        lastMessage,
+        currentStore.passage
+      );
+      console.log(answer);
+      if (answer === null || answer.length === 0) {
+        currentStore.messages.push({
+          type: "bot",
+          message:
+            "There's no answer to this question, please contact the seller.",
+          time: getTime(new Date()),
+        });
+      } else {
+        currentStore.messages.push({
+          type: "bot",
+          message: answer[0].text,
+          time: getTime(new Date()),
+        });
+      }
+      setLastMessage("");
+    }
+  };
+
+  const getTime = (date) => {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  };
 
   useEffect(() => {
     setMessageInput("");
   }, [currentStore]);
+
+  useEffect(() => {
+    answerQuestion();
+  }, [counter]);
 
   return (
     <Container>
@@ -188,7 +245,11 @@ function Aftersales() {
                     animation="tada-hover"
                   ></box-icon>
                 </ChatTopIconContainer>
-                <ChatTopIconContainer>
+                <ChatTopIconContainer
+                  onClick={() => {
+                    setPassageBoxDisplay(true);
+                  }}
+                >
                   <box-icon
                     name="comment-dots"
                     type="solid"
@@ -206,31 +267,34 @@ function Aftersales() {
               </ChatTopIconsContainer>
             </ChatTopInnerContainer>
           </ChatTopContainer>
-          <ChatMiddleContainer>
-            {currentStore.messages?.map((message, index) => (
-              <ChatMiddleInnerContainer
-                className={index % 2 === 0 ? "" : "userMessage"}
-              >
-                <ChatMessageContainer
-                  className={index % 2 === 0 ? "storeMessage" : ""}
+          <ReactScrollableFeed>
+            <ChatMiddleContainer>
+              {currentStore.messages?.map((message, index) => (
+                <ChatMiddleInnerContainer
+                  className={message.type === "bot" ? "" : "userMessage"}
                 >
-                  {message}
-                </ChatMessageContainer>
-              </ChatMiddleInnerContainer>
-            ))}
-          </ChatMiddleContainer>
+                  <ChatMessageContainer
+                    className={message.type === "bot" ? "storeMessage" : ""}
+                  >
+                    {message.message}
+                    <Time>{message.time}</Time>
+                  </ChatMessageContainer>
+                </ChatMiddleInnerContainer>
+              ))}
+            </ChatMiddleContainer>
+          </ReactScrollableFeed>
           <ChatBottomContainer>
             <ChatBottomInnerContainer onSubmit={handleSubmit}>
               <form>
                 <input
                   type="text"
-                  placeholder="Type"
+                  placeholder="Ask a question"
                   onChange={handleMessageInput}
                   value={messageInput}
                 ></input>
                 <button
                   type="submit"
-                  disabled={currentStore.messages.length % 2 === 0}
+                  // disabled={currentStore.messages.length % 2 === 0}
                 >
                   <box-icon
                     name="send"
@@ -618,6 +682,7 @@ const ChatMiddleInnerContainer = styled.div`
 
 const ChatMessageContainer = styled.div`
   margin: 0 0 20px;
+  min-width: 100px;
   max-width: 400px;
   min-height: 50px;
   padding: 20px;
@@ -625,6 +690,17 @@ const ChatMessageContainer = styled.div`
   align-items: center;
   border-radius: 8px;
   box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+  position: relative;
+`;
+
+const Time = styled.div`
+  position: absolute;
+  bottom: 0px;
+  right: 5px;
+  z-index: 1;
+  font-size: 12px;
+  font-weight: 200;
+  color: #434a5e;
 `;
 
 const ChatBottomContainer = styled.div`
