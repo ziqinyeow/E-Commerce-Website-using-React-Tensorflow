@@ -12,7 +12,7 @@
 
 ### CodeSandBox Demo
 
-<a href="https://codesandbox.io/s/e-commerce-web-application-gy21f" target="_blank"> Check this out </a>
+<a href="https://codesandbox.io/s/festive-chatterjee-ocwwu?file=/src/App.js" target="_blank"> Check this out </a>
 <br>
 All the style is written using styled-components in .js file.
 <br>
