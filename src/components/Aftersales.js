@@ -17,6 +17,7 @@ function Aftersales() {
   const [qnaModel, setQnaModel] = useState(null);
   const [counter, setCounter] = useState(0);
   const [passageBoxDisplay, setPassageBoxDisplay] = useState(false);
+  const [passage, setPassage] = useState("");
 
   const loadQnaModel = async () => {
     const loadedModel = await qna.load();
@@ -58,11 +59,8 @@ function Aftersales() {
 
   const answerQuestion = async () => {
     if (qnaModel !== null && lastMessage !== null) {
-      const answer = await qnaModel.findAnswers(
-        lastMessage,
-        currentStore.passage
-      );
-      console.log(answer);
+      const answer = await qnaModel.findAnswers(lastMessage, passage);
+      // console.log(answer);
       if (answer === null || answer.length === 0) {
         currentStore.messages.push({
           type: "bot",
@@ -81,6 +79,19 @@ function Aftersales() {
     }
   };
 
+  const handlePassageInputChange = (e) => {
+    setPassage(e.target.value);
+  };
+
+  const handlePassageChange = (e) => {
+    console.log(passage);
+    currentStore.passage = passage;
+  };
+
+  const closePassageBox = () => {
+    setPassageBoxDisplay(false);
+  };
+
   const getTime = (date) => {
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -94,6 +105,7 @@ function Aftersales() {
 
   useEffect(() => {
     setMessageInput("");
+    setPassage(currentStore.passage);
   }, [currentStore]);
 
   useEffect(() => {
@@ -246,8 +258,11 @@ function Aftersales() {
                   ></box-icon>
                 </ChatTopIconContainer>
                 <ChatTopIconContainer
-                  onClick={() => {
+                  onMouseEnter={() => {
                     setPassageBoxDisplay(true);
+                  }}
+                  onMouseLeave={() => {
+                    setPassageBoxDisplay(false);
                   }}
                 >
                   <box-icon
@@ -256,6 +271,19 @@ function Aftersales() {
                     color="#919191"
                     animation="tada-hover"
                   ></box-icon>
+                  <PassageBox className={passageBoxDisplay ? "show" : ""}>
+                    <textarea
+                      cols="30"
+                      rows="10"
+                      placeholder="The store doesn't include any passage."
+                      onChange={handlePassageInputChange}
+                      value={passage}
+                    ></textarea>
+                    <PassageBtnBox>
+                      <button onClick={handlePassageChange}>Save</button>
+                      <button onClick={closePassageBox}>Close</button>
+                    </PassageBtnBox>
+                  </PassageBox>
                 </ChatTopIconContainer>
                 <ChatTopIconContainer>
                   <box-icon
@@ -642,7 +670,7 @@ const ChatTopIconContainer = styled.div`
   cursor: pointer;
   background-color: #f3f3f3;
   transition: all 0.2s ease;
-
+  position: relative;
   box-icon {
     width: 22px;
     height: 22px;
@@ -650,6 +678,99 @@ const ChatTopIconContainer = styled.div`
 
   :hover {
     background-color: #e4e4e4;
+  }
+
+  .show {
+    visibility: visible;
+    opacity: 1;
+  }
+`;
+
+const PassageBox = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 260px;
+  height: 250px;
+  bottom: -260px;
+  right: 0;
+  background-color: black;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 16px;
+  border-top-right-radius: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background-image: url("https://www.transparenttextures.com/patterns/gplay.png");
+  color: #434a5e;
+  visibility: hidden;
+  text-align: left;
+  border-radius: 8px;
+  padding: 10px;
+  position: absolute;
+  z-index: 10;
+  opacity: 0;
+  transition: all 0.5s ease;
+
+  ::after {
+    content: "";
+    position: absolute;
+    bottom: 92%;
+    right: 5%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #6c63ff transparent transparent transparent;
+  }
+
+  textarea {
+    margin: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    resize: none;
+    background-color: white;
+    padding: 5px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+  }
+`;
+
+const PassageBtnBox = styled.div`
+  margin-top: 20px 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  button {
+    width: 40%;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    outline: none;
+    font-size: 17px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 30;
+
+    :hover {
+      background-color: #514bc0;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
   }
 `;
 
