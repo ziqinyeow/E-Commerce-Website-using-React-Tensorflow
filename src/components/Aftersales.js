@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import * as tf from "@tensorflow/tfjs";
+import * as toxicity from "@tensorflow-models/toxicity";
 import * as qna from "@tensorflow-models/qna";
 import ReactScrollableFeed from "react-scrollable-feed";
 import styled from "styled-components";
@@ -18,15 +19,23 @@ function Aftersales() {
   const [counter, setCounter] = useState(0);
   const [passageBoxDisplay, setPassageBoxDisplay] = useState(false);
   const [passage, setPassage] = useState("");
+  const threshold = 1;
+  const [toxicityModel, setToxicityModel] = useState(null);
+  const [toxic, setToxic] = useState("");
 
   const loadQnaModel = async () => {
-    const loadedModel = await qna.load();
-    setQnaModel(loadedModel);
+    const loadedQnaModel = await qna.load();
+    setQnaModel(loadedQnaModel);
+  };
+
+  const loadToxicityModel = async () => {
+    const loadedToxicityModel = await toxicity.load(threshold);
+    setToxicityModel(loadedToxicityModel);
   };
 
   useEffect(() => {
     loadQnaModel();
-    console.log(qnaModel);
+    loadToxicityModel();
   }, []);
 
   const handleSearch = (event) => {
@@ -38,9 +47,25 @@ function Aftersales() {
     setSearchResult(exact);
   };
 
-  const handleMessageInput = (event) => {
+  const handleMessageInput = async (event) => {
     const { value } = event.target;
     setMessageInput(value);
+    if (value !== null) {
+      const predictions = await toxicityModel.classify(value);
+      const prob = predictions[6].results[0].probabilities[0];
+      if (prob < 0.1) {
+        setToxic("Too toxic");
+      } else if (prob < 0.3) {
+        setToxic("Toxic");
+      } else if (prob < 0.6) {
+        setToxic("Neutral");
+      } else {
+        setToxic("Good");
+      }
+      if (value === "") {
+        setToxic("");
+      }
+    }
   };
 
   const handleSubmit = (event) => {
@@ -54,6 +79,7 @@ function Aftersales() {
       });
       setCounter((p) => p + 1);
       setMessageInput("");
+      setToxic("");
     }
   };
 
@@ -105,6 +131,7 @@ function Aftersales() {
 
   useEffect(() => {
     setMessageInput("");
+    setToxic("");
     setPassage(currentStore.passage);
   }, [currentStore]);
 
@@ -314,6 +341,15 @@ function Aftersales() {
           <ChatBottomContainer>
             <ChatBottomInnerContainer onSubmit={handleSubmit}>
               <form>
+                <ToxicityDisplay
+                  style={{
+                    transform:
+                      messageInput.length === 0 ? "translateY(30px)" : "",
+                  }}
+                >
+                  {toxic !== "" && "Toxicity : "}
+                  {toxic}
+                </ToxicityDisplay>
                 <input
                   type="text"
                   placeholder="Ask a question"
@@ -322,7 +358,7 @@ function Aftersales() {
                 ></input>
                 <button
                   type="submit"
-                  // disabled={currentStore.messages.length % 2 === 0}
+                  disabled={toxic === "Too toxic" || toxic === "Toxic"}
                 >
                   <box-icon
                     name="send"
@@ -837,6 +873,8 @@ const ChatBottomInnerContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+
   form {
     width: 90%;
     height: 45%;
@@ -864,6 +902,8 @@ const ChatBottomInnerContainer = styled.div`
       width: 0 !important;
       height: 0 !important;
     }
+    position: relative;
+    z-index: 1;
   }
 
   button {
@@ -875,4 +915,24 @@ const ChatBottomInnerContainer = styled.div`
     cursor: pointer;
     width: 60px;
   }
+`;
+
+const ToxicityDisplay = styled.div`
+  position: absolute;
+  top: -80%;
+  height: 65px;
+  width: 200px;
+  padding-top: 12px;
+  z-index: 0;
+  background: blue;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: all 0.5s ease;
+  display: flex;
+  justify-content: center;
+  color: white;
+  font-weight: 500;
 `;
