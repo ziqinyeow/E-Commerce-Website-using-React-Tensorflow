@@ -1,4 +1,4 @@
-# E-Commerce Web Application using React JS & Tensorflow
+# E-Commerce Web Application using React JS & Tensorflow JS
 
 https://youtu.be/LtYONgrt2zc
 
