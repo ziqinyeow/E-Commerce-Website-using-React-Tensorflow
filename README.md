@@ -1,7 +1,5 @@
 # E-Commerce Web Application using React JS & Tensorflow JS
 
-https://youtu.be/LtYONgrt2zc
-
 ### Overview
 <ul>
   <li>Dashboard style e-commerce website</li>
