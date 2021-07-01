@@ -7,7 +7,6 @@ import styled from "styled-components";
 import stores from "../data/store";
 import storeNameNotFound from "../svg/storenamenotfound.svg";
 import contactMessage from "../svg/contactmessage.svg";
-import UnderConstruction from "./UnderConstruction";
 
 function Aftersales() {
   const [input, setInput] = useState("");
@@ -22,6 +21,7 @@ function Aftersales() {
   const threshold = 1;
   const [toxicityModel, setToxicityModel] = useState(null);
   const [toxic, setToxic] = useState("");
+  const [load, setLoad] = useState(false);
 
   const loadQnaModel = async () => {
     const loadedQnaModel = await qna.load();
@@ -31,11 +31,13 @@ function Aftersales() {
   const loadToxicityModel = async () => {
     const loadedToxicityModel = await toxicity.load(threshold);
     setToxicityModel(loadedToxicityModel);
+    setLoad(true);
   };
 
   useEffect(() => {
     loadQnaModel();
     loadToxicityModel();
+    setLoad(false);
   }, []);
 
   const handleSearch = (event) => {
@@ -50,7 +52,7 @@ function Aftersales() {
   const handleMessageInput = async (event) => {
     const { value } = event.target;
     setMessageInput(value);
-    if (value !== null) {
+    if (value !== null || value !== "") {
       const predictions = await toxicityModel.classify(value);
       const prob = predictions[6].results[0].probabilities[0];
       if (prob < 0.1) {
@@ -350,23 +352,29 @@ function Aftersales() {
                   {toxic !== "" && "Toxicity : "}
                   {toxic}
                 </ToxicityDisplay>
-                <input
-                  type="text"
-                  placeholder="Ask a question"
-                  onChange={handleMessageInput}
-                  value={messageInput}
-                ></input>
-                <button
-                  type="submit"
-                  disabled={toxic === "Too toxic" || toxic === "Toxic"}
-                >
-                  <box-icon
-                    name="send"
-                    type="solid"
-                    color="#6c63ff"
-                    animation="tada-hover"
-                  ></box-icon>
-                </button>
+                {load ? (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Ask a question"
+                      onChange={handleMessageInput}
+                      value={messageInput}
+                    />
+                    <button
+                      type="submit"
+                      disabled={toxic === "Too toxic" || toxic === "Toxic"}
+                    >
+                      <box-icon
+                        name="send"
+                        type="solid"
+                        color="#6c63ff"
+                        animation="tada-hover"
+                      ></box-icon>
+                    </button>
+                  </>
+                ) : (
+                  <h1>Loading</h1>
+                )}
               </form>
             </ChatBottomInnerContainer>
           </ChatBottomContainer>

@@ -9,7 +9,6 @@ import {
 // import * as mobilenet from "@tensorflow-models/mobilenet";
 import styled from "styled-components";
 import allProducts from "./data/all";
-import { shuffle } from "./functions/ArrayFunction";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -19,7 +18,6 @@ import Saved from "./components/Saved";
 import Cart from "./components/Cart";
 import ProductScreen from "./components/ProductScreen";
 import ScrollToTop from "./components/ScrollToTop";
-import UnderConstruction from "./components/UnderConstruction";
 import Signup from "./components/Signup";
 import Aftersales from "./components/Aftersales";
 import Analytics from "./components/Analytics";
