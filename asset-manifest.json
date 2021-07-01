@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/E-Commerce-Website-using-React-Tensorflow/static/css/main.4b5f9008.chunk.css",
-    "main.js": "/E-Commerce-Website-using-React-Tensorflow/static/js/main.a427bafa.chunk.js",
-    "main.js.map": "/E-Commerce-Website-using-React-Tensorflow/static/js/main.a427bafa.chunk.js.map",
+    "main.js": "/E-Commerce-Website-using-React-Tensorflow/static/js/main.9db77d26.chunk.js",
+    "main.js.map": "/E-Commerce-Website-using-React-Tensorflow/static/js/main.9db77d26.chunk.js.map",
     "runtime-main.js": "/E-Commerce-Website-using-React-Tensorflow/static/js/runtime-main.ea05676c.js",
     "runtime-main.js.map": "/E-Commerce-Website-using-React-Tensorflow/static/js/runtime-main.ea05676c.js.map",
-    "static/js/2.a6f366b5.chunk.js": "/E-Commerce-Website-using-React-Tensorflow/static/js/2.a6f366b5.chunk.js",
-    "static/js/2.a6f366b5.chunk.js.map": "/E-Commerce-Website-using-React-Tensorflow/static/js/2.a6f366b5.chunk.js.map",
+    "static/js/2.a2d8b51b.chunk.js": "/E-Commerce-Website-using-React-Tensorflow/static/js/2.a2d8b51b.chunk.js",
+    "static/js/2.a2d8b51b.chunk.js.map": "/E-Commerce-Website-using-React-Tensorflow/static/js/2.a2d8b51b.chunk.js.map",
     "static/js/3.c120dc0d.chunk.js": "/E-Commerce-Website-using-React-Tensorflow/static/js/3.c120dc0d.chunk.js",
     "static/js/3.c120dc0d.chunk.js.map": "/E-Commerce-Website-using-React-Tensorflow/static/js/3.c120dc0d.chunk.js.map",
     "index.html": "/E-Commerce-Website-using-React-Tensorflow/index.html",
     "static/css/main.4b5f9008.chunk.css.map": "/E-Commerce-Website-using-React-Tensorflow/static/css/main.4b5f9008.chunk.css.map",
-    "static/js/2.a6f366b5.chunk.js.LICENSE.txt": "/E-Commerce-Website-using-React-Tensorflow/static/js/2.a6f366b5.chunk.js.LICENSE.txt",
+    "static/js/2.a2d8b51b.chunk.js.LICENSE.txt": "/E-Commerce-Website-using-React-Tensorflow/static/js/2.a2d8b51b.chunk.js.LICENSE.txt",
     "static/media/Tour.fc80a160.svg": "/E-Commerce-Website-using-React-Tensorflow/static/media/Tour.fc80a160.svg",
     "static/media/clothing.ddcfdc81.svg": "/E-Commerce-Website-using-React-Tensorflow/static/media/clothing.ddcfdc81.svg",
     "static/media/construction.9c824697.svg": "/E-Commerce-Website-using-React-Tensorflow/static/media/construction.9c824697.svg",
@@ -40,8 +40,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.ea05676c.js",
-    "static/js/2.a6f366b5.chunk.js",
+    "static/js/2.a2d8b51b.chunk.js",
     "static/css/main.4b5f9008.chunk.css",
-    "static/js/main.a427bafa.chunk.js"
+    "static/js/main.9db77d26.chunk.js"
   ]
 }
