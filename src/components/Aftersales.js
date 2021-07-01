@@ -343,17 +343,17 @@ function Aftersales() {
           <ChatBottomContainer>
             <ChatBottomInnerContainer onSubmit={handleSubmit}>
               <form>
-                <ToxicityDisplay
-                  style={{
-                    transform:
-                      messageInput.length === 0 ? "translateY(30px)" : "",
-                  }}
-                >
-                  {toxic !== "" && "Toxicity : "}
-                  {toxic}
-                </ToxicityDisplay>
                 {load ? (
                   <>
+                    <ToxicityDisplay
+                      style={{
+                        transform:
+                          messageInput.length === 0 ? "translateY(30px)" : "",
+                      }}
+                    >
+                      {toxic !== "" && "Toxicity : "}
+                      {toxic}
+                    </ToxicityDisplay>
                     <input
                       type="text"
                       placeholder="Ask a question"
@@ -373,7 +373,7 @@ function Aftersales() {
                     </button>
                   </>
                 ) : (
-                  <h1>Loading</h1>
+                  <div>Loading...</div>
                 )}
               </form>
             </ChatBottomInnerContainer>
